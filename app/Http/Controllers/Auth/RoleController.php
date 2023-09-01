@@ -33,9 +33,14 @@ class RoleController extends Controller
     protected function index(Request $request): View
     {
         $roles = Role::orderBy('id', 'DESC')->paginate(5);
-        return view('roles.index', compact('roles'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+
+        return view('roles.index', [
+            'roles' => $roles,
+            'i' => ($request->input('page', 1) - 1) * 5,
+            'active' => 'roles-user',
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -45,7 +50,10 @@ class RoleController extends Controller
     protected function create(): View
     {
         $permission = Permission::get();
-        return view('roles.create', compact('permission'));
+        return view('roles.create', [
+            'permission' => $permission,
+            'active' => 'roles-user',
+        ]);
     }
 
     /**
@@ -64,7 +72,7 @@ class RoleController extends Controller
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
 
-        return redirect()->route('roles.index')
+        return redirect()->route('dashboard.roles.index')
             ->with('success', 'Role created successfully');
     }
     /**
@@ -80,7 +88,12 @@ class RoleController extends Controller
             ->where("role_has_permissions.role_id", $id)
             ->get();
 
-        return view('roles.show', compact('role', 'rolePermissions'));
+        return view('roles.show', [
+            'role' => $role,
+            'rolePermissions' => $rolePermissions,
+            'active' => 'roles-user',
+
+        ]);
     }
 
     /**
@@ -97,7 +110,13 @@ class RoleController extends Controller
             ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
             ->all();
 
-        return view('roles.edit', compact('role', 'permission', 'rolePermissions'));
+        return view(
+            'roles.edit',
+            compact('role', 'permission', 'rolePermissions'),
+            [
+                'active' => 'roles-user',
+            ]
+        );
     }
 
     /**
@@ -120,7 +139,7 @@ class RoleController extends Controller
 
         $role->syncPermissions($request->input('permission'));
 
-        return redirect()->route('roles.index')
+        return back()
             ->with('success', 'Role updated successfully');
     }
     /**
@@ -132,7 +151,7 @@ class RoleController extends Controller
     protected function destroy($id): RedirectResponse
     {
         DB::table("roles")->where('id', $id)->delete();
-        return redirect()->route('roles.index')
+        return redirect()->route('dashboard.roles.index')
             ->with('success', 'Role deleted successfully');
     }
 }

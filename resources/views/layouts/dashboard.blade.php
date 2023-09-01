@@ -30,6 +30,17 @@
     <!-- Scripts -->
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
 
+    <style>
+        label.required::after {
+            content: "*";
+            /* Simbol bintang (*) untuk menandakan wajib diisi */
+            color: red;
+            /* Warna teks merah */
+            margin-left: 4px;
+            /* Jarak antara label dan simbol bintang */
+        }
+    </style>
+
 
 </head>
 

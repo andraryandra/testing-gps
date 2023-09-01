@@ -20,3 +20,4 @@
 <link href="{{ asset('dashboard/assets/css/light-theme.css') }}" rel="stylesheet" />
 <link href="{{ asset('dashboard/assets/css/semi-dark.css') }}" rel="stylesheet" />
 <link href="{{ asset('dashboard/assets/css/header-colors.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('dashboard/pretty-checkbox/dist/pretty-checkbox.min.css') }}">

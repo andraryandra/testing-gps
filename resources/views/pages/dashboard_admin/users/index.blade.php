@@ -133,6 +133,8 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{-- @foreach ($data->chunk(10) as $chunk) --}}
+                        {{-- @foreach ($chunk as $key => $user) --}}
                         @foreach ($data as $key => $user)
                             <tr>
                                 <td>{{ ++$i }}</td>
@@ -184,9 +186,13 @@
                                 </td>
                             </tr>
                         @endforeach
+                        {{-- @endforeach --}}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+    {!! $data->render() !!}
+
 @endsection

@@ -9,11 +9,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('permission:users-list|users-create|users-edit|users-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:users-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:users-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:users-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,6 +32,10 @@ class UserController extends Controller
     protected function index(Request $request): View
     {
 
+        if (Gate::denies('users-list')) {
+            abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
+        }
+
         $users = User::select('name', 'email', 'id')->orderByDesc('created_at')->paginate(5);
 
         return view(
@@ -29,6 +43,7 @@ class UserController extends Controller
             [
                 'data' => $users,
                 'title' => 'User Management',
+                'active' => 'users',
                 'breadcumb' => [
                     'links' => [
                         [
@@ -48,8 +63,15 @@ class UserController extends Controller
      */
     protected function create(): View
     {
+        if (Gate::denies('users-list')) {
+            abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
+        }
+
         $roles = Role::pluck('name', 'name')->all();
-        return view('pages.dashboard_admin.users.create', compact('roles'));
+        return view('pages.dashboard_admin.users.create', [
+            'roles' => $roles,
+            'active' => 'users',
+        ]);
     }
 
     /**
@@ -60,6 +82,10 @@ class UserController extends Controller
      */
     protected function store(Request $request): RedirectResponse
     {
+        if (Gate::denies('users-list')) {
+            abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
+        }
+
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
@@ -85,8 +111,15 @@ class UserController extends Controller
      */
     protected function show($id): View
     {
+        if (Gate::denies('users-list')) {
+            abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
+        }
+
         $user = User::find($id);
-        return view('pages.dashboard_admin.users.show', compact('user'));
+        return view('pages.dashboard_admin.users.show', [
+            'user' => $user,
+            'active' => 'users',
+        ]);
     }
 
     /**
@@ -97,6 +130,10 @@ class UserController extends Controller
      */
     protected function edit($id): View
     {
+        if (Gate::denies('users-list')) {
+            abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
+        }
+
         $user = User::find($id);
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
@@ -105,6 +142,7 @@ class UserController extends Controller
             'user' => $user,
             'roles' => $roles,
             'userRole' => $userRole,
+            'active' => 'users',
         ]);
     }
 
@@ -117,6 +155,10 @@ class UserController extends Controller
      */
     protected function update(Request $request, $id): RedirectResponse
     {
+        if (Gate::denies('users-list')) {
+            abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
+        }
+
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
@@ -149,6 +191,10 @@ class UserController extends Controller
      */
     protected function destroy($id): RedirectResponse
     {
+        if (Gate::denies('users-list')) {
+            abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
+        }
+
         User::find($id)->delete();
         return redirect()->route('dashboard.users.index')
             ->with('success', 'User deleted successfully');

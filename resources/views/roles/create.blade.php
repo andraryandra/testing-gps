@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 
-@section('content')
+@section('admin')
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">

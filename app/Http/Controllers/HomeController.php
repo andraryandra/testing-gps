@@ -24,7 +24,22 @@ class HomeController extends Controller
 
     public function admin()
     {
-        return view('pages.dashboard_admin.index');
+        return view(
+            'pages.dashboard_admin.index',
+            [
+                'title' => 'Dashboard Admin',
+                'active' => 'dashboard',
+                'breadcumb' => [
+                    'links' => [
+                        [
+                            'name' => 'Dashboard',
+                            'url' => route('dashboard.admin')
+                        ]
+                    ]
+                ]
+
+            ]
+        );
     }
 
     public function user()
