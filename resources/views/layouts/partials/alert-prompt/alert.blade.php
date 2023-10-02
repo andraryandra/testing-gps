@@ -28,6 +28,9 @@
             <div class="fs-3 text-danger"><i class="bi bi-x-circle-fill"></i></div>
             <div class="ms-3">
                 <div class="text-danger">Terjadi kesalahan. Silakan periksa dan coba lagi.</div>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
             </div>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

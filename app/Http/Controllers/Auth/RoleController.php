@@ -38,6 +38,14 @@ class RoleController extends Controller
             'roles' => $roles,
             'i' => ($request->input('page', 1) - 1) * 5,
             'active' => 'roles-user',
+            'breadcumb' => [
+                'links' => [
+                    [
+                        'name' => 'Roles',
+                        'url' => route('dashboard.roles.index'),
+                    ],
+                ],
+            ],
         ]);
     }
 

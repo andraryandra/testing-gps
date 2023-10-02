@@ -44,6 +44,20 @@ class HomeController extends Controller
 
     public function user()
     {
-        return view('pages.dashboard_user.index');
+        return view(
+            'pages.dashboard_user.index',
+            [
+                'title' => 'Dashboard User',
+                'active' => 'dashboard',
+                'breadcumb' => [
+                    'links' => [
+                        [
+                            'name' => 'Dashboard',
+                            'url' => route('dashboard.user')
+                        ]
+                    ]
+                ]
+            ]
+        );
     }
 }

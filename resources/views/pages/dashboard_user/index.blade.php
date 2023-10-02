@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('admin')
+@section('user')
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
         <div class="breadcrumb-title pe-3">Halaman Utama</div>
         <div class="ps-3">
@@ -8,7 +8,7 @@
                     <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">{{ Auth::user()->name ?? '' }}
-                        ({{ Auth::user()->roles ?? '' }})</li>
+                        ({{ Auth::user()->roles[0]['name'] ?? '' }})</li>
                 </ol>
             </nav>
         </div>

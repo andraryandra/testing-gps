@@ -44,6 +44,11 @@ class PermissionTableSeeder extends Seeder
             'visit-sales-edit',
             'visit-sales-delete',
 
+            'visit-schedules-list',
+            'visit-schedules-create',
+            'visit-schedules-edit',
+            'visit-schedules-delete',
+
         ];
 
         foreach ($permissions as $permission) {

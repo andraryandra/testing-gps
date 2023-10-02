@@ -30,26 +30,26 @@
             </li>
         @endcan
 
-        {{-- @can('users-list') --}}
-        <li>
-            <a href="javascript:;"
-                class="has-arrow {{ $active == 'users' ? 'active-menu mm-active text-primary' : '' }}">
-                <div class="parent-icon"><i class="bi bi-people-fill"></i>
-                </div>
-                <div class="menu-title">User</div>
-            </a>
-            <ul>
-                <li> <a href="{{ route('dashboard.users.index') }}"
-                        class="{{ $active == 'users' ? 'active-menu mm-active text-primary' : '' }}"><i
-                            class="bi bi-circle"></i>All User</a>
-                </li>
-                <li> <a href="#"><i class="bi bi-circle"></i>User Admin</a>
-                </li>
-                <li> <a href="#"><i class="bi bi-circle"></i>User Pengguna</a>
-                </li>
-            </ul>
-        </li>
-        {{-- @endcan --}}
+        @can('users-list')
+            <li>
+                <a href="javascript:;"
+                    class="has-arrow {{ $active == 'users' ? 'active-menu mm-active text-primary' : '' }}">
+                    <div class="parent-icon"><i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="menu-title">User</div>
+                </a>
+                <ul>
+                    <li> <a href="{{ route('dashboard.users.index') }}"
+                            class="{{ $active == 'users' ? 'active-menu mm-active text-primary' : '' }}"><i
+                                class="bi bi-circle"></i>All User</a>
+                    </li>
+                    <li> <a href="#"><i class="bi bi-circle"></i>User Admin</a>
+                    </li>
+                    <li> <a href="#"><i class="bi bi-circle"></i>User Pengguna</a>
+                    </li>
+                </ul>
+            </li>
+        @endcan
 
         @can('category-list')
             <li class="">
@@ -69,6 +69,17 @@
                     <div class="parent-icon"><i class="bi bi-shop"></i>
                     </div>
                     <div class="menu-title">Offial Stores</div>
+                </a>
+            </li>
+        @endcan
+
+        @can('visit-schedules-list')
+            <li class="">
+                <a href="{{ route('dashboard.visit-schedules.index') }}"
+                    class="{{ $active == 'visit-schedules' ? 'active-menu mm-active text-primary' : '' }}">
+                    <div class="parent-icon"><i class="bi bi-shop"></i>
+                    </div>
+                    <div class="menu-title">Visit Schedules</div>
                 </a>
             </li>
         @endcan

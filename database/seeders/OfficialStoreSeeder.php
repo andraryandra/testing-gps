@@ -29,6 +29,7 @@ class OfficialStoreSeeder extends Seeder
 
             for ($i = 0; $i < $chunkSize; $i++) {
                 $data[] = [
+                    'id' => $faker->uuid, // Menghasilkan id acak
                     'category_id' => $category_id,
                     'name' => $faker->company,
                     'status' => $faker->randomElement(['ACTIVE', 'INACTIVE']),

@@ -28,6 +28,7 @@ class CategorySeeder extends Seeder
         // Isi tabel categories dengan data kategori
         foreach ($categories as $category) {
             DB::table('categories')->insert([
+                'id' => $faker->uuid, // Menghasilkan id acak
                 'name' => $category['name'],
                 'detail' => $category['detail'],
                 'created_at' => now(),
@@ -38,6 +39,7 @@ class CategorySeeder extends Seeder
         // Contoh menambahkan data kategori acak
         for ($i = 0; $i < 5; $i++) {
             DB::table('categories')->insert([
+                'id' => $faker->uuid, // Menghasilkan id acak
                 'name' => $faker->word, // Menghasilkan nama kategori acak
                 'detail' => $faker->sentence,
                 'created_at' => now(),

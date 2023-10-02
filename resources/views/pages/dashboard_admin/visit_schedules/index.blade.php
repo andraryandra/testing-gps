@@ -5,7 +5,7 @@
 
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Tabel Visit Sales</div>
+        <div class="breadcrumb-title pe-3">Tabel Visit Schedules</div>
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
@@ -35,10 +35,10 @@
             <div class="row align-items-center">
                 <div class="col-lg-3 col-xl-2">
                     @can('visit-sales-create')
-                        <a href="{{ route('dashboard.visit-sales.create') }}" class="btn btn-sm btn-primary mb-3 mb-lg-0"
+                        <a href="{{ route('dashboard.visit-schedules.create') }}" class="btn btn-sm btn-primary mb-3 mb-lg-0"
                             data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tambah"><i
                                 class="bi bi-plus-square-fill mx-1"></i>
-                            Tambah Visit Sales
+                            Tambah Visit Schedules
                         </a>
                     @endcan
                 </div>
@@ -82,7 +82,7 @@
                     </select>
                 </div>
                 <div class="col-lg-2 col-6 col-md-3">
-                    <form method="GET" action="{{ route('dashboard.visit-sales.index') }}">
+                    <form method="GET" action="{{ route('dashboard.visit-schedules.index') }}">
                         <label for="perPage">Tampilkan:</label>
                         <select id="perPage" name="perPage" class="form-select" onchange="this.form.submit()">
                             <option value="10" {{ request('perPage') == '10' ? 'selected' : '' }}>10</option>
@@ -93,8 +93,8 @@
                             <option value="1000" {{ request('perPage') == '1000' ? 'selected' : '' }}>1000</option>
                             <option value="2500" {{ request('perPage') == '2500' ? 'selected' : '' }}>2500</option>
                             <option value="5000" {{ request('perPage') == '5000' ? 'selected' : '' }}>5000</option>
-                            <option value="{{ $visit_sales->total() }}"
-                                {{ request('perPage') == $visit_sales->total() ? 'selected' : '' }}>Semua</option>
+                            <option value="{{ $visit_schedules->total() }}"
+                                {{ request('perPage') == $visit_schedules->total() ? 'selected' : '' }}>Semua</option>
                         </select>
                     </form>
 
@@ -103,10 +103,10 @@
                     <div class="row">
                         <div class="col-md-6">
                             <!-- Tampilkan jumlah data yang ditampilkan -->
-                            @if (!$visit_sales->isEmpty())
-                                <p class="d-inline-block">Showing {{ $visit_sales->firstItem() }} to
-                                    {{ $visit_sales->lastItem() }} of
-                                    {{ $visit_sales->total() }} entries</p>
+                            @if (!$visit_schedules->isEmpty())
+                                <p class="d-inline-block">Showing {{ $visit_schedules->firstItem() }} to
+                                    {{ $visit_schedules->lastItem() }} of
+                                    {{ $visit_schedules->total() }} entries</p>
                             @endif
                         </div>
 
@@ -125,115 +125,83 @@
                         <th>#</th>
                         <th>User Name</th>
                         <th>Official Store Name</th>
-                        <th>IP Address</th>
-                        <th>Check In</th>
-                        <th>Check Out</th>
-                        <th>Visit Sales Date</th>
+                        <th>Visit Day</th>
+                        <th>Visit Note</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($visit_schedules as $item)
+                    @forelse ($visit_schedules as $visit_schedule)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $item->user->name }}</td>
-                            <td>{{ $item->official_store->name }}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ $visit_schedule['user']['name'] }}</td>
+                            <td>{{ $visit_schedule['official_store']['name'] }}</td>
                             <td>
-                                {{ \Carbon\Carbon::parse($item['custom_visit_day'])->isoFormat('DD MMMM YYYY, dddd') }}
+                                {{ \Carbon\Carbon::parse($visit_schedule['custom_visit_day'])->isoFormat('DD MMMM YYYY, dddd') }}
                             </td>
+                            <td>{{ $visit_schedule['custom_visit_note'] }}</td>
                             <td>
-                                {{-- <a href="{{ route('dashboard.visit-sales.create.store-page', $item['id']) }}"
-                                    class="btn btn-sm btn-primary mx-2 my-2">Lihat Store Page</a> --}}
-                                <form action="{{ route('dashboard.visit-sales.store.store-page') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="official_store_id" value="{{ $item->official_store_id }}">
-                                    <input type="hidden" name="visit_schedules_id" value="{{ $item->id }}">
-
-                                    <button type="submit" class="btn btn-sm btn-primary mx-2 my-2">Store Page</button>
-                                </form>
+                                <div class="table-actions d-flex align-items-center gap-3 fs-6">
+                                    @can('visit-sales-edit')
+                                        <a href="{{ route('dashboard.visit-schedules.edit', $visit_schedule['id']) }}"
+                                            class="text-warning ml-4" data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="Edit"><i class="bi bi-pencil-fill"></i></a>
+                                    @endcan
+                                    @can('visit-sales-delete')
+                                        <a href="{{ route('dashboard.visit-schedules.destroy', $visit_schedule->id) }}"
+                                            class="text-danger mx-5" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                            title="Hapus"
+                                            onclick="event.preventDefault();
+                                                     if (confirm('Anda yakin ingin menghapus?')) {
+                                                         document.getElementById('delete-form-{{ $visit_schedule->id }}').submit();
+                                                     }">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                        <form id="delete-form-{{ $visit_schedule->id }}"
+                                            action="{{ route('dashboard.visit-schedules.destroy', $visit_schedule->id) }}"
+                                            method="POST" style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    @endcan
+                                </div>
                             </td>
                         </tr>
-                    @endforeach
-                    {{-- @forelse ($visit_sales as $visit)
-                        @foreach ($visit_schedules as $item)
-                            @if ($visit->official_store_id == $item->official_store_id)
-                                <tr>
-                                    <td>{{ $i++ }}</td>
-                                    <td>{{ $item->officialStore->name }}</td>
-                                    <td>{{ $visit->official_store->name }}</td>
-                                    <td>{{ $visit->ip_address }}</td>
-                                    <td>{{ $visit->check_in }}</td>
-                                    <td>{{ $visit->check_out }}</td>
-                                    <td>
-                                        <div class="table-actions d-flex align-items-center gap-3 fs-6">
-                                            @can('visit-sales-edit')
-                                                <a href="{{ route('dashboard.visit-sales.edit', $visit->id) }}"
-                                                    class="text-warning ml-4" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Edit"><i class="bi bi-pencil-fill"></i></a>
-                                            @endcan
-                                            @can('visit-sales-delete')
-                                                <a href="{{ route('dashboard.visit-sales.destroy', $visit->id) }}"
-                                                    class="text-danger mx-5" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                    title="Hapus"
-                                                    onclick="event.preventDefault();
-                                                            if (confirm('Anda yakin ingin menghapus?')) {
-                                                                document.getElementById('delete-form-{{ $visit->id }}').submit();
-                                                            }">
-                                                    <i class="bi bi-trash-fill"></i>
-                                                </a>
-                                                <form id="delete-form-{{ $visit->id }}"
-                                                    action="{{ route('dashboard.visit-sales.destroy', $visit->id) }}"
-                                                    method="POST" style="display: none;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                            @endcan
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endif
-                        @endforeach
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">Data tidak tersedia</td>
+                            <td colspan="6" class="text-center">Data tidak tersedia</td>
                         </tr>
-                    @endforelse --}}
+                    @endforelse
                 </tbody>
                 <tfoot>
                     <th>#</th>
                     <th>User Name</th>
                     <th>Official Store Name</th>
-                    <th>IP Address</th>
-                    <th>Check In</th>
-                    <th>Check Out</th>
-                    <th>Visit Sales Date</th>
+                    <th>Visit Day</th>
+                    <th>Visit Note</th>
                     <th></th>
                 </tfoot>
             </table>
         </div>
-
     </div>
 
     <div class="container mt-4">
         <div class="row">
             <div class="col-md-12 text-center">
                 <!-- Tampilkan pagination links jika lebih dari 1 halaman -->
-                @if ($visit_sales->total() > $visit_sales->perPage())
+                @if ($visit_schedules->total() > $visit_schedules->perPage())
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center">
-                            <li class="page-item {{ $visit_sales->onFirstPage() ? 'disabled' : '' }}">
+                            <li class="page-item {{ $visit_schedules->onFirstPage() ? 'disabled' : '' }}">
                                 <a class="page-link"
-                                    href="{{ $visit_sales->appends(['perPage' => Request::get('perPage')])->url(1) }}"
+                                    href="{{ $visit_schedules->appends(['perPage' => Request::get('perPage')])->url(1) }}"
                                     aria-label="First">
                                     <span aria-hidden="true">First</span>
                                 </a>
                             </li>
-                            {{ $visit_sales->appends(['perPage' => Request::get('perPage')])->links() }}
-                            <li class="page-item {{ $visit_sales->hasMorePages() ? '' : 'disabled' }}">
-                                <a class="page-link" href="{{ $visit_sales->url($visit_sales->lastPage()) }}"
+                            {{ $visit_schedules->appends(['perPage' => Request::get('perPage')])->links() }}
+                            <li class="page-item {{ $visit_schedules->hasMorePages() ? '' : 'disabled' }}">
+                                <a class="page-link" href="{{ $visit_schedules->url($visit_schedules->lastPage()) }}"
                                     aria-label="Last">
                                     <span aria-hidden="true">Last</span>
                                 </a>

@@ -3,6 +3,7 @@
 use App\Models\Toko\OfficialStore;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\VisitSalesController;
 use App\Http\Controllers\Auth\RedirectAuthController;
 use App\Http\Controllers\Admin\Toko\ProductController;
+use App\Http\Controllers\Admin\VisitSchedulesController;
 use App\Http\Controllers\Admin\Toko\OfficialStoreController;
 
 /*
@@ -26,6 +28,9 @@ use App\Http\Controllers\Admin\Toko\OfficialStoreController;
 Route::get('/', function () {
     return redirect()->route('login');
 });
+
+Route::get('/map', [MapController::class, 'index'])->name('map.index');
+
 
 Route::get('/redirect', [RedirectAuthController::class, 'redirect'])->name('redirect');
 
@@ -68,13 +73,33 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/official-stores/load-new-data', 'loadNewData')->name('official-store.loadNewData');
         });
 
+        Route::controller(VisitSchedulesController::class)->group(function () {
+            Route::get('/visit-schedules', 'index')->name('visit-schedules.index');
+            Route::get('/visit-schedules/create', 'create')->name('visit-schedules.create');
+            Route::post('/visit-schedules', 'store')->name('visit-schedules.store');
+            Route::get('/visit-schedules/{id}', 'show')->name('visit-schedules.show');
+            Route::get('/visit-schedules/{id}/edit', 'edit')->name('visit-schedules.edit');
+            Route::put('/visit-schedules/{id}', 'update')->name('visit-schedules.update');
+            Route::delete('/visit-schedules/{id}', 'destroy')->name('visit-schedules.destroy');
+        });
+
         Route::controller(VisitSalesController::class)->group(function () {
             Route::get('/visit-sales', 'index')->name('visit-sales.index');
+
             Route::get('/visit-sales/create', 'create')->name('visit-sales.create');
+            Route::get('/get-store-location', 'getStoreLocation')->name('visit-sales.json.location');
             Route::post('/visit-sales', 'store')->name('visit-sales.store');
+            Route::put('/visit-sales/check-out/{id}', 'storeVisitSalesCheckOut')->name('visit-sales.check-out');
+
+
+            Route::get('/visit-sales/{id}/store-official', 'createPageVisitSales')->name('visit-sales.create.store-page');
+            Route::post('/visit-sales/store-official', 'storeVisitSales')->name('visit-sales.store.store-page');
+
             Route::get('/visit-sales/{id}', 'show')->name('visit-sales.show');
+
             Route::get('/visit-sales/{id}/edit', 'edit')->name('visit-sales.edit');
             Route::put('/visit-sales/{id}', 'update')->name('visit-sales.update');
+
             Route::delete('/visit-sales/{id}', 'destroy')->name('visit-sales.destroy');
         });
     });

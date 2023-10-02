@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CategoriesRequest extends FormRequest
+class StoreVisitSalesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,18 +24,18 @@ class CategoriesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:75',
-            'detail' => 'required|max:255',
+            'user_id' => 'nullable',
+            'official_store_id' => 'required',
+            'check_in' => 'nullable',
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'Nama Kategori tidak boleh kosong',
-            'name.max' => 'Nama Kategori tidak boleh lebih dari 75 karakter',
-            'detail.required' => 'Detail Kategori tidak boleh kosong',
-            'detail.max' => 'Detail Kategori tidak boleh lebih dari 255 karakter',
+            'user_id.required' => 'User is required',
+            'official_store_id.required' => 'Official Store is required',
+            'check_in.required' => 'Check In is required',
         ];
     }
 }

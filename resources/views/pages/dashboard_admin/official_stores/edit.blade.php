@@ -132,7 +132,7 @@
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-primary" title="Simpan">Update</button>
                 </div>
             </div>
         </div>
@@ -140,5 +140,82 @@
     {!! Form::close() !!}
 
 
+    <div class="card" style="background-color:orangered; border-color:darkblue;">
+        {{-- <img class="card-img-top" src="holder.js/100x180/" alt="Title"> --}}
+        <div class="card-body">
+            <h4 class="card-title">Laravel Leaflet Maps</h4>
+            <div id='map'></div>
+        </div>
+    </div>
+    {{--
+    @push('style')
+        <link rel='stylesheet' href='https://unpkg.com/leaflet@1.8.0/dist/leaflet.css' crossorigin='' />
+    @endpush
+
+    @push('script')
+        <script src='https://unpkg.com/leaflet@1.8.0/dist/leaflet.js' crossorigin=''></script>
+        <script src='https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js'></script>
+        <script>
+            let map, markers = [];
+            /* ----------------------------- Initialize Map ----------------------------- */
+            function initMap() {
+                map = L.map('map', {
+                    center: {
+                        lat: 28.626137,
+                        lng: 79.821603,
+                    },
+                    zoom: 15
+                });
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+
+                map.on('click', mapClicked);
+                initMarkers();
+            }
+            initMap();
+
+            /* --------------------------- Initialize Markers --------------------------- */
+            function initMarkers() {
+                const initialMarkers = <?php echo json_encode($initialMarkers); ?>;
+
+                for (let index = 0; index < initialMarkers.length; index++) {
+
+                    const data = initialMarkers[index];
+                    const marker = generateMarker(data, index);
+                    marker.addTo(map).bindPopup(`<b>${data.position.lat},  ${data.position.lng}</b>`);
+                    map.panTo(data.position);
+                    markers.push(marker)
+                }
+            }
+
+            function generateMarker(data, index) {
+                return L.marker(data.position, {
+                        draggable: data.draggable
+                    })
+                    .on('click', (event) => markerClicked(event, index))
+                    .on('dragend', (event) => markerDragEnd(event, index));
+            }
+
+            /* ------------------------- Handle Map Click Event ------------------------- */
+            function mapClicked($event) {
+                console.log(map);
+                console.log($event.latlng.lat, $event.latlng.lng);
+            }
+
+            /* ------------------------ Handle Marker Click Event ----------------------- */
+            function markerClicked($event, index) {
+                console.log(map);
+                console.log($event.latlng.lat, $event.latlng.lng);
+            }
+
+            /* ----------------------- Handle Marker DragEnd Event ---------------------- */
+            function markerDragEnd($event, index) {
+                console.log(map);
+                console.log($event.target.getLatLng());
+            }
+        </script>
+    @endpush --}}
 
 @endsection

@@ -136,6 +136,7 @@
         <!--start content-->
         <main class="page-content">
             @yield('admin')
+            @yield('user')
         </main>
 
         <!--end page main-->

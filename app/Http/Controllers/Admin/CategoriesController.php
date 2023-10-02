@@ -91,7 +91,8 @@ class CategoriesController extends Controller
 
         ]);
 
-        return redirect()->route('dashboard.categories.index')->with('success', 'Category created successfully');
+        // return redirect()->route('dashboard.categories.index')->with('success', 'Category created successfully');
+        return to_route('dashboard.categories.index', ['success' => 'Category created successfully']);
     }
 
     /**
@@ -104,42 +105,37 @@ class CategoriesController extends Controller
     /**
      * Show the form for editing the resource.
      */
-    public function edit(Categories $category)
+    public function edit($id)
     {
         if (Gate::denies('category-list')) {
             abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
         }
 
-        $data = [
-            'category' => $category
-        ];
+        $category = Categories::findOrfail($id);
 
         return view('pages.dashboard_admin.categories.edit', [
-            'category' => $data,
+            'category' => $category,
             'title' => 'Edit Category',
             'active' => 'categories',
-            'breadcumb' => [
-                'links' => [
-                    [
-                        'name' => 'Categories',
-                        'url' => route('dashboard.categories.index')
-                    ],
-                    [
-                        'name' => 'Edit Category',
-                        'url' => route('dashboard.categories.edit', $category->id)
-                    ]
-                ]
-            ],
-
         ]);
     }
 
     /**
      * Update the resource in storage.
      */
-    public function update(Categories $category): never
+    public function update(CategoriesRequest $request)
     {
-        abort(404);
+        if (Gate::denies('category-list')) {
+            abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
+        }
+
+        $category = Categories::find($request->id);
+        $category->name = $request->name;
+        $category->detail = $request->detail;
+        $category->save();
+
+        // return redirect()->route('dashboard.categories.index')->with('success', 'Category updated successfully');
+        return to_route('dashboard.categories.index', ['success' => 'Category updated successfully']);
     }
 
     /**
@@ -154,6 +150,7 @@ class CategoriesController extends Controller
         $category = Categories::find($id);
         $category->delete();
 
-        return redirect()->route('dashboard.categories.index')->with('success', 'Category deleted successfully');
+        // return redirect()->route('dashboard.categories.index')->with('success', 'Category deleted successfully');
+        return to_route('dashboard.categories.index', ['success' => 'Category deleted successfully']);
     }
 }

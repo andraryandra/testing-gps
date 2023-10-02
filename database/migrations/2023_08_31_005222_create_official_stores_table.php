@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('official_stores', function (Blueprint $table) {
-            $table->id();
+            // $table->id();
+            $table->uuid('id')->primary();
 
             // $table->foreignUuid('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignUuid('category_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
 
             $table->string('name', 100);
             $table->enum('status', ['ACTIVE', 'INACTIVE'])->default('ACTIVE');

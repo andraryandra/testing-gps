@@ -29,9 +29,11 @@ class VisitSalesRequest extends FormRequest
         return [
             'user_id' => 'required|exists:users,id',
             'official_store_id' => 'required|exists:official_stores,id',
-            'ip_address' => 'required|ip',
+            'ip_address' => 'nullable|ip',
             'check_in' => 'required|date',
-            'check_out' => 'required|date',
+            'check_out' => 'nullable|date',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ];
     }
 
@@ -42,12 +44,13 @@ class VisitSalesRequest extends FormRequest
             'user_id.exists' => 'User ID is not exists.',
             'official_store_id.required' => 'Official Store ID is required.',
             'official_store_id.exists' => 'Official Store ID is not exists.',
-            'ip_address.required' => 'IP Address is required.',
             'ip_address.ip' => 'IP Address is not valid.',
             'check_in.required' => 'Check In is required.',
             'check_in.date' => 'Check In is not valid.',
             'check_out.required' => 'Check Out is required.',
             'check_out.date' => 'Check Out is not valid.',
+            'latitude.numeric' => 'Latitude is not valid.',
+            'longitude.numeric' => 'Longitude is not valid.',
         ];
     }
 }

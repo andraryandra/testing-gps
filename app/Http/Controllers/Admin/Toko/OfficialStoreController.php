@@ -11,6 +11,7 @@ use App\Models\Toko\OfficialStore;
 use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OfficialStoreRequest;
+use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
@@ -30,39 +31,111 @@ class OfficialStoreController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // public function index(Request $request)
+    // {
+    //     if (Gate::denies('official-store-list')) {
+    //         abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
+    //     }
+
+    //     $perPage = $request->input('perPage', 10); // Jumlah data per halaman, default 10.
+
+    //     $query = OfficialStore::select(['id', 'category_id', 'name', 'status', 'phone', 'email', 'city', 'latitude', 'longitude', 'description'])->latest();
+
+    //     // Check if $perPage is 'Semua' to decide whether to use paginate or not.
+    //     if ($perPage == 'Semua') {
+    //         // Fetch all data using chunk to process them in smaller chunks.
+    //         $chunkSize = 500; // Jumlah data per potongan.
+    //         $stores = [];
+    //         $query->chunk($chunkSize, function ($storesChunk) use (&$stores) {
+    //             foreach ($storesChunk as $store) {
+    //                 // Lakukan pengolahan data di sini untuk setiap toko.
+    //                 // Misalnya, Anda dapat melakukan sesuatu seperti:
+    //                 // $store->name atau $store->status
+    //                 $stores[] = $store;
+    //             }
+    //         });
+    //     } else {
+    //         // Use paginate if $perPage is not 'Semua'.
+    //         $stores = $query->paginate($perPage);
+    //     }
+
+    //     return view('pages.dashboard_admin.official_stores.index', [
+    //         'title' => 'Official Store',
+    //         'active' => 'official-store',
+    //         'i' => ($stores->currentPage() - 1) * $stores->perPage() + 1,
+    //         'stores' => $stores,
+    //         'breadcumb' => [
+    //             'links' => [
+    //                 [
+    //                     'name' => 'Official Store',
+    //                     'url' => route('dashboard.official-store.index')
+    //                 ]
+    //             ]
+    //         ]
+    //     ]);
+    // }
+
     public function index(Request $request)
     {
-        if (Gate::denies('official-store-list')) {
-            abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
+        abort_if(Gate::denies('official-store-list'), 403);
+
+        $perPage = $request->input('perPage', 5);
+
+        $query = OfficialStore::select(['id', 'category_id', 'name', 'status', 'city', 'latitude', 'longitude', 'province', 'address', 'postal_code', 'description'])
+            ->latest();
+
+
+        // ->whereHas('category') // Hanya ambil toko yang memiliki kategori terkait.
+        $status = $request->input('status');
+
+        if ($status && in_array($status, ['ACTIVE', 'INACTIVE'])) {
+            $query->where('status', $status);
         }
 
-        $perPage = $request->input('perPage', 10); // Jumlah data per halaman, default 10.
-
-        $query = OfficialStore::select(['id', 'category_id', 'name', 'status', 'phone', 'email', 'city', 'latitude', 'longitude', 'description'])->latest();
-
-        // Check if $perPage is 'Semua' to decide whether to use paginate or not.
         if ($perPage == 'Semua') {
-            // Fetch all data using chunk to process them in smaller chunks.
-            $chunkSize = 500; // Jumlah data per potongan.
-            $stores = [];
-            $query->chunk($chunkSize, function ($storesChunk) use (&$stores) {
+            $chunkSize = 100;
+            $stores = new Collection();
+            $currentPage = 1;
+
+            $query->chunk($chunkSize, function ($storesChunk) use ($stores, &$currentPage) {
                 foreach ($storesChunk as $store) {
-                    // Lakukan pengolahan data di sini untuk setiap toko.
-                    // Misalnya, Anda dapat melakukan sesuatu seperti:
-                    // $store->name atau $store->status
-                    $stores[] = $store;
+                    $store->setAttribute('i', ($currentPage - 1) * $storesChunk->perPage() + 1);
+                    $stores->push($store);
+                    $currentPage++;
                 }
             });
         } else {
-            // Use paginate if $perPage is not 'Semua'.
             $stores = $query->paginate($perPage);
         }
+
+        $initialMarkers = [];
+
+        foreach ($stores as $store) {
+            $initialMarkers[] = [
+                'position' => [
+                    'lat' => $store->latitude,
+                    'lng' => $store->longitude,
+                    'name' => $store->name,
+                    'status' => $store->status,
+                    'city' => $store->city,
+                    'province' => $store->province,
+                    'address' => $store->address,
+                    'postal_code' => $store->postal_code,
+                ],
+                'draggable' => false // Sesuaikan sesuai kebutuhan
+            ];
+        }
+
+
 
         return view('pages.dashboard_admin.official_stores.index', [
             'title' => 'Official Store',
             'active' => 'official-store',
             'i' => ($stores->currentPage() - 1) * $stores->perPage() + 1,
             'stores' => $stores,
+            'status' => $status,
+            'perPage' => $perPage,
+            'initialMarkers' => $initialMarkers,
             'breadcumb' => [
                 'links' => [
                     [
@@ -74,6 +147,22 @@ class OfficialStoreController extends Controller
         ]);
     }
 
+
+    // $storesForMap = OfficialStore::select(['latitude', 'longitude'])->get();
+
+    // $initialMarkers = [];
+
+    // foreach ($storesForMap as $store) {
+    //     $initialMarkers[] = [
+    //         'position' => [
+    //             'lat' => $store->latitude,
+    //             'lng' => $store->longitude
+    //         ],
+    //         'draggable' => true
+    //     ];
+    // }
+
+
     public function loadNewData()
     {
         $newDataCount = OfficialStore::where('created_at', '>', Carbon::now()->subSeconds(10))->count(); // Anda dapat menyesuaikan waktu interval sesuai kebutuhan Anda.
@@ -84,13 +173,14 @@ class OfficialStoreController extends Controller
     /**
      * Show the form for creating the resource.
      */
-    public function create()
+    public function create(): View
     {
         if (Gate::denies('official-store-list')) {
             abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
         }
 
         $categories = Categories::select(['id', 'name'])->get();
+
 
         return view('pages.dashboard_admin.official_stores.create', [
             'title' => 'Official Store',
@@ -155,6 +245,7 @@ class OfficialStoreController extends Controller
 
         $categories = Categories::select(['id', 'name'])->get();
         $stores = OfficialStore::findOrFail($id);
+
 
         return view('pages.dashboard_admin.official_stores.edit', [
             'title' => 'Official Store',

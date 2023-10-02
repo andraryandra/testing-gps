@@ -11,18 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('visits', function (Blueprint $table) {
+        Schema::create('visit_schedules', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignUuid('official_store_id')->constrained('official_stores')->cascadeOnDelete()->cascadeOnUpdate();
 
-            $table->string('ip_address')->nullable();
-            $table->dateTime('check_in');
-            $table->dateTime('check_out')->nullable();
+            $table->date('custom_visit_day');
+            $table->string('custom_visit_note', 255)->nullable();
 
-            $table->float('latitude', 10, 6)->nullable(); // Kolom untuk latitude
-            $table->float('longitude', 10, 6)->nullable(); // Kolom untuk longitude
 
             $table->timestamps();
         });
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('visits');
+        Schema::dropIfExists('visit_schedules');
     }
 };

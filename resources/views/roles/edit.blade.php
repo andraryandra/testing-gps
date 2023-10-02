@@ -105,12 +105,12 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="card-title d-flex align-items-center">
-                            <h5 class="mb-0">Menu Produk</h5>
+                            <h5 class="mb-0">Menu Category</h5>
                         </div>
                         <hr />
                         <div class="form-group">
                             @foreach ($permission as $value)
-                                @if (strpos($value->name, 'product-') === 0)
+                                @if (strpos($value->name, 'category-') === 0)
                                     <div class="form-check my-2">
                                         <label class="form-check-label" for="permission_{{ $value->id }}">
                                             {{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, ['class' => 'form-check-input', 'id' => 'permission_' . $value->id]) }}
@@ -134,7 +134,7 @@
                         <hr />
                         <div class="form-group">
                             @foreach ($permission as $value)
-                                @if (strpos($value->name, 'category-') === 0)
+                                @if (strpos($value->name, 'product-') === 0)
                                     <div class="form-check my-2">
                                         <label class="form-check-label" for="permission_{{ $value->id }}">
                                             {{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, ['class' => 'form-check-input', 'id' => 'permission_' . $value->id]) }}
@@ -148,6 +148,8 @@
                     </div>
                 </div>
             </div>
+
+
 
             <div class="col-md-4">
                 <div class="card mb-3">
@@ -172,6 +174,56 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-center">
+                            <h5 class="mb-0">Menu Visit Schedules</h5>
+                        </div>
+                        <hr />
+                        <div class="form-group">
+                            @foreach ($permission as $value)
+                                @if (strpos($value->name, 'visit-schedules-') === 0)
+                                    <div class="form-check my-2">
+                                        <label class="form-check-label" for="permission_{{ $value->id }}">
+                                            {{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, ['class' => 'form-check-input', 'id' => 'permission_' . $value->id]) }}
+                                            <span class="mx-2">{{ $value->name }}</span>
+                                        </label>
+
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-center">
+                            <h5 class="mb-0">Menu Visit Sales</h5>
+                        </div>
+                        <hr />
+                        <div class="form-group">
+                            @foreach ($permission as $value)
+                                @if (strpos($value->name, 'visit-sales-') === 0)
+                                    <div class="form-check my-2">
+                                        <label class="form-check-label" for="permission_{{ $value->id }}">
+                                            {{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, ['class' => 'form-check-input', 'id' => 'permission_' . $value->id]) }}
+                                            <span class="mx-2">{{ $value->name }}</span>
+                                        </label>
+
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
 
 
         </div>
