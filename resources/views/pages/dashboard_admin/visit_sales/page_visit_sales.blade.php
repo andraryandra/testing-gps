@@ -13,7 +13,6 @@
         </div>
     </div>
 
-
     @include('layouts.partials.alert-prompt.alert')
 
     <div class="row">
@@ -69,55 +68,40 @@
             </div>
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="mb-3">
-                <label for="check_out">Check Out</label>
-                <br>
-                {!! Form::open(['route' => ['dashboard.visit-sales.check-out', $visit_sales->id], 'method' => 'POST']) !!}
-                {!! Form::hidden('_method', 'PUT') !!}
-                {!! Form::hidden('latitude', null, ['id' => 'latitude']) !!} <!-- Field tersembunyi untuk latitude -->
-                {!! Form::hidden('longitude', null, ['id' => 'longitude']) !!} <!-- Field tersembunyi untuk longitude -->
-                <button type="submit" class="btn btn-primary btn-sm">Check Out</button>
-                {!! Form::close() !!}
+                <label for="check_in">Post Image</label>
+                <a href="{{ route('dashboard.visit-sales.createStoreImageOfficial', ['id' => $visit_sales['id']]) }}"
+                    class="btn btn-action btn-sm @if (!empty($imageOfficial['image'])) btn-success @else btn-primary @endif"
+                    title="Post Image">Image @if (empty($imageOfficial['image']))
+                        (Belum terisi)
+                    @else
+                        (Sudah terisi)
+                    @endif
+                </a>
             </div>
         </div>
 
 
 
-
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+            <div class="mb-3">
+                <label for="check_out">Check Out</label>
+                <br>
+                @if (is_null($visit_sales->check_out))
+                    {!! Form::open(['route' => ['dashboard.visit-sales.check-out', $visit_sales->id], 'method' => 'POST']) !!}
+                    {!! Form::hidden('_method', 'PUT') !!}
+                    {!! Form::hidden('latitude', null, ['id' => 'latitude']) !!} <!-- Field tersembunyi untuk latitude -->
+                    {!! Form::hidden('longitude', null, ['id' => 'longitude']) !!} <!-- Field tersembunyi untuk longitude -->
+                    <button type="submit" class="btn btn-primary btn-sm">Check Out</button>
+                    {!! Form::close() !!}
+                @else
+                    <!-- Tambahkan pesan atau tindakan yang sesuai ketika check_out sudah terisi -->
+                    <p>Visit has already been checked out.</p>
+                @endif
+            </div>
+        </div>
     </div>
-
-
-    {{-- <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="mb-3">
-                    <strong>Official Store:</strong>
-                    <select name="official_store_id" id="official_store_id" class="form-control">
-                        <option value="">Pilih Official Store</option>
-                        @foreach ($officialStores as $officialStore)
-                            <option value="{{ $officialStore->id }}">{{ $officialStore->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <input type="hidden" name="latitude" id="latitude">
-                <input type="hidden" name="longitude" id="longitude">
-                <div class="mb-3">
-                    <strong>Alamat:</strong>
-                    <textarea name="address" class="form-control" placeholder="Alamat"></textarea>
-                </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div id="mapid" style="height: 400px;"></div>
-            </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button class="btn btn-primary" type="submit">Submit</button>
-            </div>
-        </div> --}}
 
     @push('script')
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Pastikan Anda telah menyertakan jQuery -->

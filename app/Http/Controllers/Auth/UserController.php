@@ -29,19 +29,20 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    protected function index(Request $request): View
+    public function index(Request $request): View
     {
-
         if (Gate::denies('users-list')) {
             abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
         }
 
         $users = User::select('name', 'email', 'id')->orderByDesc('created_at')->paginate(5);
+        $roles = Role::orderBy('id', 'DESC')->paginate(5);
 
         return view(
             'pages.dashboard_admin.users.index',
             [
                 'data' => $users,
+                'roles' => $roles, // Tambahkan data roles ke tampilan
                 'title' => 'User Management',
                 'active' => 'users',
                 'breadcumb' => [
@@ -55,6 +56,8 @@ class UserController extends Controller
             ]
         )->with('i', ($request->input('page', 1) - 1) * 5);
     }
+
+
 
     /**
      * Show the form for creating a new resource.

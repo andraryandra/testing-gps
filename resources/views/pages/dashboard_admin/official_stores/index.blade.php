@@ -477,7 +477,8 @@
                                     <p><i class="bi bi-geo-alt-fill text-success"></i> <strong class="text-success">Latitude:</strong> ${userLat}</p>
                                     <p><i class="bi bi-geo-alt-fill text-success"></i> <strong class="text-success">Longitude:</strong> ${userLng}</p>
                                     <p><i class="bi bi-person-fill text-success"></i> <strong class="text-success">Your Location</strong></p>
-                                </div>
+                                    <button class="btn btn-primary" onclick="openGoogleMaps(${userLat},${userLng})">Open in Google Maps</button>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -570,9 +571,9 @@
                     icon: L.divIcon({
                         className: 'custom-icon',
                         html: `
-                    <i class="bi bi-geo-alt-fill" style="color: ${statusBadge2}; font-size:24px;"></i>
-                    <strong class="text-center">Toko ${data.order}</strong>
-                    `,
+                <i class="bi bi-geo-alt-fill" style="color: ${statusBadge2}; font-size:24px;"></i>
+                <strong class="text-center">Toko ${data.order}</strong>
+                `,
                         iconSize: [30, 30]
                     })
                 });
@@ -590,7 +591,11 @@
                                     <strong class="text-success">Status:</strong>
                                     <span class="badge bg-${statusBadge} rounded-pill">${data.position.status}</span>
                                 </p>
-                                <p><strong class="text-success">Order:</strong> ${data.order}</p>
+                                <p><strong class="text-success">Toko Nomor:</strong> ${data.order}</p>
+                                <div>
+                                <p><strong class="text-success">Open Maps:</strong></p>
+                                    <button class="btn btn-sm btn-action btn-primary" onclick="openGoogleMaps(${data.position.lat}, ${data.position.lng})">Open in Google Maps</button>
+                                </div>
                             </div>
                         </div>
                         <div class="col">
@@ -609,6 +614,11 @@
                 map.panTo(data.position);
                 markers.push(marker);
             }
+        }
+
+        function openGoogleMaps(lat, lng) {
+            const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+            window.open(url, '_blank');
         }
 
         initMap();

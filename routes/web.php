@@ -91,9 +91,11 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('/visit-sales', 'store')->name('visit-sales.store');
             Route::put('/visit-sales/check-out/{id}', 'storeVisitSalesCheckOut')->name('visit-sales.check-out');
 
-
             Route::get('/visit-sales/{id}/store-official', 'createPageVisitSales')->name('visit-sales.create.store-page');
             Route::post('/visit-sales/store-official', 'storeVisitSales')->name('visit-sales.store.store-page');
+            Route::get('/visit-sales/post-image-official/{id}', 'createStoreImageOfficial')->name('visit-sales.createStoreImageOfficial');
+            Route::put('/visit-sales/post-image-official-store/{id}', 'storeImageOfficial')->name('visit-sales.storeImageOfficial');
+
 
             Route::get('/visit-sales/{id}', 'show')->name('visit-sales.show');
 

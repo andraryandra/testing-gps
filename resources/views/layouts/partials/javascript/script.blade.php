@@ -14,6 +14,10 @@
 <!--app-->
 <script src="{{ asset('dashboard/assets/js/app.js') }}"></script>
 <script src="{{ asset('dashboard/assets/js/index3.js') }}"></script>
+
+<script src="{{ asset('dashboard/assets/plugins/select2/js/select2.min.js') }}"></script>
+<script src="{{ asset('dashboard/assets/js/form-select2.js') }}"></script>
+
 <script>
     new PerfectScrollbar(".best-product")
 </script>

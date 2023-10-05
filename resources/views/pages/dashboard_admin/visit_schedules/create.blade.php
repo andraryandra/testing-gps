@@ -33,7 +33,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 my-2">
                     <div class="form-group">
                         <label for="user_id" class="my-2 fw-bold required">Sales User:</label>
-                        {!! Form::select('user_id', $users->pluck('name', 'id'), null, ['class' => 'form-control']) !!}
+                        {!! Form::select('user_id', $users->pluck('name', 'id'), null, ['class' => 'single-select']) !!}
                     </div>
                 </div>
 
@@ -41,7 +41,7 @@
                     <div class="form-group">
                         <label for="official_store_id" class="my-2 fw-bold required">Official Store:</label>
                         {!! Form::select('official_store_id', $officialStoresSelect->pluck('name', 'id'), null, [
-                            'class' => 'form-control',
+                            'class' => 'single-select',
                         ]) !!}
                     </div>
                 </div>

@@ -143,7 +143,7 @@
                                         <img src="{{ asset('dashboard/assets/images/avatars/avatar-1.png') }}"
                                             class="rounded-circle" width="44" height="44" alt="">
                                         <div class="">
-                                            <p class="mb-0">{{ $user->name }}</p>
+                                            <p class="mb-0">{{ $user['name'] }}</p>
                                         </div>
                                     </div>
                                 </td>
@@ -151,7 +151,8 @@
                                 <td>
                                     @if (!empty($user->getRoleNames()))
                                         @foreach ($user->getRoleNames() as $v)
-                                            <label class="badge bg-success">{{ $v }}</label>
+                                            <label
+                                                class="badge {{ $v == 'Admin' ? 'bg-warning' : ($v == 'User' ? 'bg-primary' : 'bg-success') }}">{{ $v }}</label>
                                         @endforeach
                                     @endif
                                 </td>

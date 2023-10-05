@@ -133,74 +133,81 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($visit_schedules as $item)
+                    @forelse ($visit_schedules as $item)
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{ $item->user->name }}</td>
                             <td>{{ $item->official_store->name }}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+
+                            @forelse ($item->visit_sales as $visit)
+                                <td>{{ $visit['ip_address'] }}</td>
+                                <td>
+                                    {{ \Carbon\Carbon::parse($visit['check_in'])->isoFormat('dddd, DD MMMM YYYY [at] HH:mm:ss (A)') }}
+                                </td>
+                                <td>
+                                    {{ \Carbon\Carbon::parse($visit['check_out'])->isoFormat('dddd, DD MMMM YYYY [at] HH:mm:ss (A)') }}
+                                </td>
+                            @empty
+                                <td>
+                                    <span class="badge bg-warning">Belum Terisi</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning">Belum Terisi</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning">Belum Terisi</span>
+                                </td>
+                            @endforelse
+
                             <td>
                                 {{ \Carbon\Carbon::parse($item['custom_visit_day'])->isoFormat('DD MMMM YYYY, dddd') }}
                             </td>
                             <td>
-                                {{-- <a href="{{ route('dashboard.visit-sales.create.store-page', $item['id']) }}"
-                                    class="btn btn-sm btn-primary mx-2 my-2">Lihat Store Page</a> --}}
                                 <form action="{{ route('dashboard.visit-sales.store.store-page') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="official_store_id" value="{{ $item->official_store_id }}">
                                     <input type="hidden" name="visit_schedules_id" value="{{ $item->id }}">
 
-                                    <button type="submit" class="btn btn-sm btn-primary mx-2 my-2">Store Page</button>
+                                    @if (
+                                        !$item->visit_sales->isEmpty() &&
+                                            isset($item->visit_sales[0]->check_in) &&
+                                            isset($item->visit_sales[0]->check_out) &&
+                                            !$item->image_officials->isEmpty() &&
+                                            isset($item->image_officials[0]->image))
+                                        <button type="submit" class="btn btn-sm mx-2 my-2 btn-success"
+                                            title="Outlet {{ $item['official_store']['name'] }}">Kunjungi Outlet
+                                            {{ $item['official_store']['name'] }}
+                                        </button>
+                                    @elseif (isset($item->visit_sales[0]->check_in) &&
+                                            isset($item->visit_sales[0]->check_out) &&
+                                            $item->image_officials->isEmpty())
+                                        <button type="submit" class="btn btn-sm mx-2 my-2 btn-warning"
+                                            title="Outlet {{ $item['official_store']['name'] }}">Kunjungi Outlet
+                                            {{ $item['official_store']['name'] }}
+                                        </button>
+                                    @elseif (isset($item->visit_sales[0]->check_in) &&
+                                            is_null($item->visit_sales[0]->check_out) &&
+                                            $item->image_officials->isEmpty())
+                                        <button type="submit" class="btn btn-sm mx-2 my-2 btn-warning"
+                                            title="Outlet {{ $item['official_store']['name'] }}">Kunjungi Outlet
+                                            {{ $item['official_store']['name'] }}
+                                        </button>
+                                    @else
+                                        <button type="submit" class="btn btn-sm mx-2 my-2 btn-secondary"
+                                            title="Outlet {{ $item['official_store']['name'] }}">Kunjungi Outlet
+                                            {{ $item['official_store']['name'] }}
+                                        </button>
+                                    @endif
                                 </form>
                             </td>
                         </tr>
-                    @endforeach
-                    {{-- @forelse ($visit_sales as $visit)
-                        @foreach ($visit_schedules as $item)
-                            @if ($visit->official_store_id == $item->official_store_id)
-                                <tr>
-                                    <td>{{ $i++ }}</td>
-                                    <td>{{ $item->officialStore->name }}</td>
-                                    <td>{{ $visit->official_store->name }}</td>
-                                    <td>{{ $visit->ip_address }}</td>
-                                    <td>{{ $visit->check_in }}</td>
-                                    <td>{{ $visit->check_out }}</td>
-                                    <td>
-                                        <div class="table-actions d-flex align-items-center gap-3 fs-6">
-                                            @can('visit-sales-edit')
-                                                <a href="{{ route('dashboard.visit-sales.edit', $visit->id) }}"
-                                                    class="text-warning ml-4" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Edit"><i class="bi bi-pencil-fill"></i></a>
-                                            @endcan
-                                            @can('visit-sales-delete')
-                                                <a href="{{ route('dashboard.visit-sales.destroy', $visit->id) }}"
-                                                    class="text-danger mx-5" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                    title="Hapus"
-                                                    onclick="event.preventDefault();
-                                                            if (confirm('Anda yakin ingin menghapus?')) {
-                                                                document.getElementById('delete-form-{{ $visit->id }}').submit();
-                                                            }">
-                                                    <i class="bi bi-trash-fill"></i>
-                                                </a>
-                                                <form id="delete-form-{{ $visit->id }}"
-                                                    action="{{ route('dashboard.visit-sales.destroy', $visit->id) }}"
-                                                    method="POST" style="display: none;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                            @endcan
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endif
-                        @endforeach
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">Data tidak tersedia</td>
+                            <td colspan="8" class="text-center">No Data
+                            </td>
                         </tr>
-                    @endforelse --}}
+                    @endforelse
+
                 </tbody>
                 <tfoot>
                     <th>#</th>
@@ -251,7 +258,7 @@
     @push('script')
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        {{-- <script>
+        <script>
             const loadUpdatedDataButton = document.getElementById('load-updated-data');
 
             function checkForUpdates() {
@@ -286,7 +293,7 @@
 
             // Panggil checkForUpdates() pertama kali saat halaman dimuat
             checkForUpdates();
-        </script> --}}
+        </script>
     @endpush
 
     @push('style')

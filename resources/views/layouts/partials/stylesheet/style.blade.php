@@ -1,6 +1,10 @@
 <!--plugins-->
 <link href="{{ asset('dashboard/assets/plugins/vectormap/jquery-jvectormap-2.0.2.css') }}" rel="stylesheet" />
 <link href="{{ asset('dashboard/assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet" />
+
+<link href="{{ asset('dashboard/assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('dashboard/assets/plugins/select2/css/select2-bootstrap4.css') }}" rel="stylesheet" />
+
 <link href="{{ asset('dashboard/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet" />
 <link href="{{ asset('dashboard/assets/plugins/metismenu/css/metisMenu.min.css') }}" rel="stylesheet" />
 <!-- Bootstrap CSS -->

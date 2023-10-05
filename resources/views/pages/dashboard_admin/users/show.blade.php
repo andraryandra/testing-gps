@@ -32,7 +32,8 @@
                 <strong>Roles:</strong>
                 @if (!empty($user->getRoleNames()))
                     @foreach ($user->getRoleNames() as $v)
-                        <label class="badge bg-success">{{ $v }}</label>
+                        <label
+                            class="badge {{ $v == 'Admin' ? 'bg-warning' : ($v == 'User' ? 'bg-primary' : 'bg-success') }}">{{ $v }}</label>
                     @endforeach
                 @endif
             </div>

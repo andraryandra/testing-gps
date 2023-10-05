@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\User;
 use App\Traits\UUID;
+use App\Models\Sales\Visit;
+use App\Models\Toko\ImageOfficial;
 use App\Models\Toko\OfficialStore;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,5 +40,15 @@ class VisitSchedules extends Model
     public function official_store()
     {
         return $this->belongsTo(OfficialStore::class, 'official_store_id');
+    }
+
+    public function visit_sales()
+    {
+        return $this->hasMany(Visit::class, 'visit_schedules_id');
+    }
+
+    public function image_officials()
+    {
+        return $this->hasMany(ImageOfficial::class, 'visit_schedules_id');
     }
 }
