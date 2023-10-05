@@ -115,14 +115,14 @@
         <div class="card-body">
             <div class="d-flex align-items-center">
                 <h5 class="mb-0">Customer Details</h5>
-                <form class="ms-auto position-relative">
+                <div class="ms-auto position-relative">
                     <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="bi bi-search"></i>
                     </div>
-                    <input class="form-control ps-5" type="text" placeholder="search">
-                </form>
+                    <input type="text" id="searchInput" class="form-control ps-5" placeholder="Search...">
+                </div>
             </div>
             <div class="table-responsive mt-3">
-                <table class="table align-middle">
+                <table id="tbluser" class="table align-middle" style="width: 100%">
                     <thead class="table-secondary">
                         <tr>
                             <th>No</th>
@@ -137,7 +137,9 @@
                         {{-- @foreach ($chunk as $key => $user) --}}
                         @foreach ($data as $key => $user)
                             <tr>
-                                <td>{{ ++$i }}</td>
+                                <td>
+                                    {{ ++$i }}
+                                </td>
                                 <td>
                                     <div class="d-flex align-items-center gap-3 cursor-pointer">
                                         <img src="{{ asset('dashboard/assets/images/avatars/avatar-1.png') }}"
@@ -194,6 +196,40 @@
         </div>
     </div>
 
-    {!! $data->render() !!}
+    {{-- {!! $data->render() !!} --}}
+
+    @push('style')
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+        <style>
+            #tbluser_filter {
+                display: none;
+            }
+        </style>
+    @endpush
+
+    @push('script')
+        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                var table = new DataTable('#tbluser', {
+                    "language": {
+                        "search": "Search:",
+                        "searchPlaceholder": "Search your word..."
+                    },
+                    columnDefs: [{
+                        orderable: false,
+                        targets: 4
+                    }]
+                });
+
+                $('#searchInput').on('keyup', function() {
+                    table.search(this.value).draw();
+                });
+            });
+        </script>
+    @endpush
 
 @endsection

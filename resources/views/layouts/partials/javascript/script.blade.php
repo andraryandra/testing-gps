@@ -18,6 +18,10 @@
 <script src="{{ asset('dashboard/assets/plugins/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('dashboard/assets/js/form-select2.js') }}"></script>
 
+{{-- <script src="{{ asset('dashboard/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('dashboard/assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
+<script src="{{ asset('dashboard/assets/js/table-datatable.js') }}"></script> --}}
+
 <script>
     new PerfectScrollbar(".best-product")
 </script>

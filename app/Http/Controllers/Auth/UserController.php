@@ -35,7 +35,7 @@ class UserController extends Controller
             abort(403); // Tampilkan halaman 403 Forbidden jika tidak memiliki izin.
         }
 
-        $users = User::select('name', 'email', 'id')->orderByDesc('created_at')->paginate(5);
+        $users = User::select('name', 'email', 'id')->orderByDesc('created_at')->get();
         $roles = Role::orderBy('id', 'DESC')->paginate(5);
 
         return view(

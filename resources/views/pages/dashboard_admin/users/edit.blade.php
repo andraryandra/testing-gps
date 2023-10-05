@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Edit User - ({{ Auth::user()->name }})</h2>
+                <h2>Edit User - ({{ $user->name }})</h2>
             </div>
             <div class="pull-right">
                 <a class="btn btn-primary my-3" href="{{ route('dashboard.users.index') }}"> Kembali</a>

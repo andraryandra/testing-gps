@@ -26,6 +26,17 @@
 
 
     @include('layouts.partials.stylesheet.style')
+    <style>
+        .dataTables_length {
+            margin: 10px 0 10px 0;
+            /* Sesuaikan dengan nilai margin yang Anda inginkan */
+        }
+
+        .dataTables_filter label {
+            margin: 10px 10px 0 0;
+            /* Sesuaikan dengan nilai margin yang Anda inginkan */
+        }
+    </style>
 
     <!-- Scripts -->
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
