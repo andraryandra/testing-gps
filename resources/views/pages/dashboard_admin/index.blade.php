@@ -19,8 +19,8 @@
                 <div class="card-body">
                     <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
                         <div class="w-50">
-                            <p>Total Orders</p>
-                            <h4 class="">8,542</h4>
+                            <p>Total User</p>
+                            <h4 class="">{{ $total_user }}</h4>
                         </div>
                         <div class="w-50">
                             <p class="mb-3 float-end text-success">+ 16% <i class="bi bi-arrow-up"></i></p>
@@ -35,8 +35,8 @@
                 <div class="card-body">
                     <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
                         <div class="w-50">
-                            <p>Total Views</p>
-                            <h4 class="">12.5M</h4>
+                            <p>Total Sales</p>
+                            <h4 class="">{{ $total_sales }}</h4>
                         </div>
                         <div class="w-50">
                             <p class="mb-3 float-end text-danger">- 3.4% <i class="bi bi-arrow-down"></i></p>
@@ -51,8 +51,8 @@
                 <div class="card-body">
                     <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
                         <div class="w-50">
-                            <p>Revenue</p>
-                            <h4 class="">$64.5K</h4>
+                            <p>Total Categori</p>
+                            <h4 class="">{{ $total_categori }}</h4>
                         </div>
                         <div class="w-50">
                             <p class="mb-3 float-end text-success">+ 24% <i class="bi bi-arrow-up"></i></p>
@@ -67,8 +67,8 @@
                 <div class="card-body">
                     <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
                         <div class="w-50">
-                            <p>Customers</p>
-                            <h4 class="">25.8K</h4>
+                            <p>Official Store</p>
+                            <h4 class="">{{ $total_official }}</h4>
                         </div>
                         <div class="w-50">
                             <p class="mb-3 float-end text-success">+ 8.2% <i class="bi bi-arrow-up"></i></p>
